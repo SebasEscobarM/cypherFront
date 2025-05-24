@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CypherDocs - Crypto Operations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .tab-content {
+            padding: 20px;
+        }
+        .key-display {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .hidden {
+            display: none;
+        }
+        .nav-tabs {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">CypherDocs - Crypto Operations</h1>
+        
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="keys-tab" data-bs-toggle="tab" data-bs-target="#keys" type="button" role="tab">Generate Keys</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="crypto-tab" data-bs-toggle="tab" data-bs-target="#crypto" type="button" role="tab">Encrypt/Decrypt</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <!-- Keys Tab -->
+            <div class="tab-pane fade show active" id="keys" role="tabpanel">
+                <h2>Generate Key Pair</h2>
+                <button id="generateKeysBtn" class="btn btn-primary mb-3">Generate New Keys</button>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Public Key</h4>
+                        <div id="publicKeyDisplay" class="key-display">No key generated yet</div>
+                        <button id="copyPublicKey" class="btn btn-secondary btn-sm">Copy</button>
+                        <button id="downloadPublicKey" class="btn btn-secondary btn-sm">Download</button>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Private Key</h4>
+                        <div id="privateKeyDisplay" class="key-display">No key generated yet</div>
+                        <button id="copyPrivateKey" class="btn btn-secondary btn-sm">Copy</button>
+                        <button id="downloadPrivateKey" class="btn btn-secondary btn-sm">Download</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crypto Tab -->
+            <div class="tab-pane fade" id="crypto" role="tabpanel">
+                <h2>Encrypt/Decrypt Files</h2>
+                
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="operationToggle">
+                    <label class="form-check-label" for="operationToggle">Switch to Decrypt</label>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fileInput" class="form-label">Select File</label>
+                    <input type="file" class="form-control" id="fileInput">
+                </div>
+
+                <div class="mb-3">
+                    <label for="keyInput" class="form-label">Key</label>
+                    <textarea class="form-control" id="keyInput" rows="4" placeholder="Enter public key for encryption or private key for decryption"></textarea>
+                </div>
+
+                <button id="processFileBtn" class="btn btn-primary">Process File</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="renderer.js" defer></script>
+</body>
+</html>

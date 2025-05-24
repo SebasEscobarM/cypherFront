@@ -1,0 +1,117 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // Key Generation
+    document.getElementById('generateKeysBtn').addEventListener('click', async () => {
+        try {
+            const result = await window.apiBridge.fetchData('http://localhost:8080/api/crypto/generate-keys');
+            console.log('Response:', result); // Para debugging
+            if (result && result.publicKey && result.privateKey) {
+                document.getElementById('publicKeyDisplay').textContent = result.publicKey;
+                document.getElementById('privateKeyDisplay').textContent = result.privateKey;
+            } else {
+                throw new Error('Invalid response format from server');
+            }
+        } catch (error) {
+            console.error('Error:', error); // Para debugging
+            alert('Error generating keys: ' + error.message);
+        }
+    });
+
+    // Copy buttons functionality
+    document.getElementById('copyPublicKey').addEventListener('click', () => {
+        copyToClipboard('publicKeyDisplay');
+    });
+
+    document.getElementById('copyPrivateKey').addEventListener('click', () => {
+        copyToClipboard('privateKeyDisplay');
+    });
+
+    function copyToClipboard(elementId) {
+        const text = document.getElementById(elementId).textContent;
+        if (text === 'No key generated yet') {
+            alert('No key to copy!');
+            return;
+        }
+        navigator.clipboard.writeText(text)
+            .then(() => alert('Copied to clipboard!'))
+            .catch(err => alert('Failed to copy: ' + err));
+    }
+
+    // Download buttons functionality
+    document.getElementById('downloadPublicKey').addEventListener('click', () => {
+        downloadKey('publicKeyDisplay', 'public_key.txt');
+    });
+
+    document.getElementById('downloadPrivateKey').addEventListener('click', () => {
+        downloadKey('privateKeyDisplay', 'private_key.txt');
+    });
+
+    function downloadKey(elementId, filename) {
+        const text = document.getElementById(elementId).textContent;
+        if (text === 'No key generated yet') {
+            alert('No key to download!');
+            return;
+        }
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+
+    // Operation toggle functionality
+    const operationToggle = document.getElementById('operationToggle');
+    const keyInput = document.getElementById('keyInput');
+
+    operationToggle.addEventListener('change', () => {
+        const isDecrypt = operationToggle.checked;
+        keyInput.placeholder = isDecrypt ? 
+            'Enter private key for decryption' : 
+            'Enter public key for encryption';
+    });
+
+    // File processing
+    document.getElementById('processFileBtn').addEventListener('click', async () => {
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        const key = keyInput.value.trim();
+        const isDecrypt = operationToggle.checked;
+
+        if (!file) {
+            alert('Please select a file first!');
+            return;
+        }
+
+        if (!key) {
+            alert('Please enter the required key!');
+            return;
+        }
+
+        try {
+            // Read file content as ArrayBuffer
+            const fileContent = await file.arrayBuffer();
+            // Send ArrayBuffer, fileName, fileType and key to main process
+            const endpoint = isDecrypt ? 
+                'http://localhost:8080/api/crypto/decrypt' : 
+                'http://localhost:8080/api/crypto/encrypt';
+
+            // Corrected order of arguments: url, fileArrayBuffer, fileName, fileType, key
+            const response = await window.apiBridge.processFile(endpoint, fileContent, file.name, file.type, key);
+            // Create download link for the processed file
+            const blob = new Blob([response], { 
+                type: isDecrypt ? file.type : 'application/octet-stream' 
+            });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = isDecrypt ? file.name : file.name + '.bin';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error processing file:', error); // Para debugging
+            alert('Error processing file: ' + error.message);
+        }
+    });
+});
+  
