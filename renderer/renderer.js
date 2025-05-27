@@ -61,22 +61,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Operation toggle functionality
-    const operationToggle = document.getElementById('operationToggle');
+    const encryptBtn = document.getElementById('encryptBtn');
+    const decryptBtn = document.getElementById('decryptBtn');
     const keyInput = document.getElementById('keyInput');
 
-    operationToggle.addEventListener('change', () => {
-        const isDecrypt = operationToggle.checked;
+    function setOperation(isDecrypt) {
+        encryptBtn.classList.toggle('active', !isDecrypt);
+        decryptBtn.classList.toggle('active', isDecrypt);
         keyInput.placeholder = isDecrypt ? 
             'Enter private key for decryption' : 
             'Enter public key for encryption';
+    }
+
+    encryptBtn.addEventListener('click', () => setOperation(false));
+    decryptBtn.addEventListener('click', () => setOperation(true));
+
+    // File input functionality
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.querySelector('.file-name');
+    const clearFileBtn = document.querySelector('.clear-file');
+
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        fileNameDisplay.firstChild.textContent = file ? file.name : 'No file chosen';
+    });
+
+    clearFileBtn.addEventListener('click', () => {
+        fileInput.value = '';
+        fileNameDisplay.firstChild.textContent = 'No file chosen';
     });
 
     // File processing
     document.getElementById('processFileBtn').addEventListener('click', async () => {
-        const fileInput = document.getElementById('fileInput');
         const file = fileInput.files[0];
         const key = keyInput.value.trim();
-        const isDecrypt = operationToggle.checked;
+        const isDecrypt = decryptBtn.classList.contains('active');
 
         if (!file) {
             alert('Please select a file first!');
