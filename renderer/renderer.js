@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Key Generation
     document.getElementById('generateKeysBtn').addEventListener('click', async () => {
         try {
-            const result = await window.apiBridge.fetchData('http://localhost:8080/api/crypto/generate-keys');
+            const result = await window.apiBridge.fetchData('https://javacifrator-production.up.railway.app/api/crypto/generate-keys');
             console.log('Response:', result); // Para debugging
             if (result && result.publicKey && result.privateKey) {
                 document.getElementById('publicKeyDisplay').textContent = result.publicKey;
@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const fileContent = await file.arrayBuffer();
             // Send ArrayBuffer, fileName, fileType and key to main process
             const endpoint = isDecrypt ? 
-                'http://localhost:8080/api/crypto/decrypt' : 
-                'http://localhost:8080/api/crypto/encrypt';
+                'https://javacifrator-production.up.railway.app/api/crypto/decrypt' : 
+                'https://javacifrator-production.up.railway.app/api/crypto/encrypt';
 
             // Corrected order of arguments: url, fileArrayBuffer, fileName, fileType, key
             const response = await window.apiBridge.processFile(endpoint, fileContent, file.name, file.type, key);

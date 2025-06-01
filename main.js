@@ -17,9 +17,6 @@ function createWindow() {
     }
   });
 
-  // Abrir DevTools para debugging
-  win.webContents.openDevTools();
-
   win.loadFile('renderer/index.html');
 }
 

@@ -5,7 +5,24 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.cypherdocs.app",
+    "productName": "CypherDocs",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "author": "Sebastian Escobar Marin",
   "license": "ISC",
