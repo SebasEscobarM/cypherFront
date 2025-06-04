@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         encryptBtn.classList.toggle('active', !isDecrypt);
         decryptBtn.classList.toggle('active', isDecrypt);
         keyInput.placeholder = isDecrypt ? 
-            'Enter private key for decryption' : 
-            'Enter public key for encryption';
+            'Enter the password for decryption' : 
+            'Enter the password for encryption';
     }
 
     encryptBtn.addEventListener('click', () => setOperation(false));
